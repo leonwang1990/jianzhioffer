@@ -1,15 +1,92 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+
+
 char* ReplaceSpace(char* str, char* restr);
+void ReplaceSpacetest();
+//////////////////////
+typedef struct ListNode* Position;
+struct ListNode{
+	int m_value;
+	Position p_next;
+};
+void AddToTail(Position* pHead, int value);
+void RemoveNode(Position* pHead, int value);
+void listtest();
+/////////////////////
 int main(int argc, int** argv)
 {
+	//ReplaceSpacetest();
+	//listtest();
+}
+///////////////////////////
+void listtest(){
+	Position pHead;
+	pHead=NULL;
+	AddToTail(&pHead,4);
+	AddToTail(&pHead,5);
+	RemoveNode(&pHead,4);
+	RemoveNode(&pHead,5);
+	AddToTail(&pHead,5);
+}
+void RemoveNode(Position* pHead, int value){
+	Position pNode;
+	Position p;
+	if (*pHead == NULL || pHead==NULL)
+		return;
+	if ((*pHead)->m_value==value)
+	{
+		p=(*pHead)->p_next;//±£´æÉ¾³ı½ÚµãµÄÏÂÒ»¸ö½ÚµãÖ¸Õë
+		free(*pHead);///ÊÍ·ÅÉ¾³ı½Úµã
+		*pHead=p;
+		return;
+	}
+	pNode=*pHead;
+	///É¾³ıÒ»¸ö½Úµãºó£¬ĞèÒª»ñµÃ¸Ã½ÚµãµÄÇ°Ò»¸ö½ÚµãµÄÖ¸Õë£¬ËùÒÔÒªÒÔpNode->p_next->m_valueµÄĞÎÊ½¼ì²â¡£
+	//ÔÚ´ËÖ®Ç°Òª¼ì²â*pHead½ÚµãµÄÖµÊÇ·ñ·ûºÏÌõ¼ş
+	while (pNode->p_next!=NULL && pNode->p_next->m_value!=value)
+		pNode=pNode->p_next;
+	//pNode->p_next==NULLÊ±pNodeÖ¸ÏòÁ´±í×îºóÒ»¸ö½Úµã£¬´ËÊ±×îºóÒ»¸ö½ÚµãµÄÖµÒÑ±»¼ì²â¹ı£¬
+	//ÔÚÉÏÒ»¸öÑ­»·pNode->p_nextÖ¸Ïò×îºó½Úµã£¬pNode->p_next->m_value¼´Îª×îºó½ÚµãµÄÖµ
+	if (pNode->p_next!=NULL)
+	{
+		p=pNode->p_next;
+		pNode->p_next=p->p_next;
+		free(p);
+	}
+
+}
+//Ê¹ÓÃLoistNde** pHead×÷Îª²ÎÊı£¬ÊÇÎªÁËµ±ĞÂ½¨µÚÒ»¸ö½ÚµãÊ±¿ÉÒÔÓĞĞ§µÄ¸øpHead¸³Öµ£¬ÀàËÆÓÚ´«ÖµºÍ´«Ö¸ÕëµÄÇø±ğ
+void AddToTail(Position* pHead, int value){
+	Position pNode;
+	Position p;
+	pNode=malloc(sizeof(struct ListNode));
+	if(pNode==NULL)
+		perror("bad malloc");
+	pNode->m_value=value;
+	pNode->p_next=NULL;
+
+	if (*pHead==NULL)
+	{
+		*pHead=pNode;///´«Ö¸ÕëLoistNde** pHeadµÄ×÷ÓÃÔÚ´Ë
+	} 
+	else
+	{
+		p=*pHead;
+		while (p->p_next!=NULL)
+			p=p->p_next;
+		p->p_next=pNode;
+	}
+}
+
+///////////////////////
+void ReplaceSpacetest(){
 	char str[20]="we are  happy.";
 	char* restr="%20";
 	ReplaceSpace(str,restr);
 	printf("%s",str);
 }
-
 char* ReplaceSpace(char* str, char* restr){
 	int spacecount=0;
 	char* p1=str;
@@ -18,28 +95,28 @@ char* ReplaceSpace(char* str, char* restr){
 	int i=0;
 	int j=0;
 	int rsize;
-	//ç»Ÿè®¡ç©ºæ ¼æ•°ï¼Œp1æœ€åæŒ‡å‘strçš„'\0'
+	//Í³¼Æ¿Õ¸ñÊı£¬p1×îºóÖ¸ÏòstrµÄ'\0'
 	while (*p1 != '\0')
 	{
 		if (*p1 == ' ')
 			spacecount++;
 		p1++;
 	}
-	//è®¡ç®—æ–°ä¸²çš„é•¿åº¦ï¼Œä¸è®¡'\0'
+	//¼ÆËãĞÂ´®µÄ³¤¶È£¬²»¼Æ'\0'
 	rsize=(strlen(str)+(strlen(restr)-1)*spacecount)*sizeof(char);
-	//newstr= (char*)realloc(str,rsize);///reallocå‡ºé”™ï¼ï¼ï¼ï¼å †é”™è¯¯
+	//newstr= (char*)realloc(str,rsize);///realloc³ö´í£¡£¡£¡£¡¶Ñ´íÎó
 	//assert(str);
 	//if (str == NULL)
 		//return NULL;
-	//p2æŒ‡å‘æ–°ä¸²çš„'\0'ä½ç½®ï¼Œç¬¬ä¸€ä¸ªå¤åˆ¶çš„æ˜¯è€ä¸²çš„'\0'åˆ°æ–°ä¸²çš„'\0'ä½ç½®
+	//p2Ö¸ÏòĞÂ´®µÄ'\0'Î»ÖÃ£¬µÚÒ»¸ö¸´ÖÆµÄÊÇÀÏ´®µÄ'\0'µ½ĞÂ´®µÄ'\0'Î»ÖÃ
 	p2=str+rsize;
 	for (i=0;i<spacecount;i++)
 	{
-		//å¤åˆ¶æ¯ä¸ªå•è¯
+		//¸´ÖÆÃ¿¸öµ¥´Ê
 		while (*p1!=' ')
 			*p2--=*p1--;
-		p1--;//è·³è¿‡ç©ºæ ¼
-		//å¡«å……restr
+		p1--;//Ìø¹ı¿Õ¸ñ
+		//Ìî³ärestr
 		j=strlen(restr);
 		while(j>0)
 			*p2--=restr[--j];
