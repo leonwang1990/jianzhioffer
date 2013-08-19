@@ -14,11 +14,33 @@ struct ListNode{
 void AddToTail(Position* pHead, int value);
 void RemoveNode(Position* pHead, int value);
 void listtest();
+///////////////////////
+void ReversePrintList();
+void IterativelyPrintList(Position pHead);
 /////////////////////
 int main(int argc, int** argv)
 {
 	//ReplaceSpacetest();
 	//listtest();
+	ReversePrintList();
+}
+///////////////////////////
+void ReversePrintList(){
+	Position pHead;
+	int i;
+	pHead=NULL;
+	for (i=0;i<10;i++)
+	{
+		AddToTail(&pHead,i);
+	}
+	IterativelyPrintList(pHead);
+}
+void IterativelyPrintList(Position pHead){
+	if (pHead==NULL)
+		return;
+	if(pHead->p_next!=NULL)
+		IterativelyPrintList(pHead->p_next);
+	printf("%d ",pHead->m_value);
 }
 ///////////////////////////
 void listtest(){
